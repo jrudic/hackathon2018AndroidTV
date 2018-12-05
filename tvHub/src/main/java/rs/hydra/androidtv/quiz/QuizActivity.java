@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.*;
 import com.bumptech.glide.Glide;
 import rs.hydra.androidtv.R;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
+import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
 
 public class QuizActivity extends FragmentActivity {
@@ -20,8 +20,10 @@ public class QuizActivity extends FragmentActivity {
     private static final long QUESTION_TIME = 3000;
 
     private LinearLayout numericAnswersLayout, multiAnswerLayout;
+    private RelativeLayout background;
 
     private TextView timer;
+    private TextView numberSolution;
     private TextView questionTitle;
     private Button answer1, answer2, answer3, answer4;
     private QuizViewModel viewModel;
@@ -34,7 +36,7 @@ public class QuizActivity extends FragmentActivity {
         setContentView(R.layout.activity_quiz);
 
         viewModel = ViewModelProviders.of(this).get(QuizViewModel.class);
-        viewModel.init();
+        viewModel.init(this);
 
         initViews();
         nextQuestion();
@@ -47,6 +49,8 @@ public class QuizActivity extends FragmentActivity {
         multiAnswerLayout = findViewById(R.id.multi_answer_layout);
         questionImage = findViewById(R.id.questionImage);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
+        numberSolution = findViewById(R.id.numberSolution);
+        background = findViewById(R.id.background);
         answer1 = findViewById(R.id.answer1);
         answer2 = findViewById(R.id.answer2);
         answer3 = findViewById(R.id.answer3);
@@ -78,30 +82,105 @@ public class QuizActivity extends FragmentActivity {
     }
 
     private void markCorrectAnswer() {
-        int correct = viewModel.getCorrectAnswer();
-        switch (correct) {
-            case QuestionUtility.ANSWER_ONE:
-                answer1.setBackgroundColor(getResources().getColor(R.color.green));
+        int type = viewModel.currentQuestionType();
+        switch (type) {
+            case QuestionUtility.QuestionType.MULTI_ANSWERS:
+            case QuestionUtility.QuestionType.PICTURE:
+                int correct = viewModel.getCorrectAnswerPosition();
+                markCorrectAnswer(correct);
                 break;
-            case QuestionUtility.ANSWER_TWO:
-                answer2.setBackgroundColor(getResources().getColor(R.color.green));
-                break;
-            case QuestionUtility.ANSWER_THREE:
-                answer3.setBackgroundColor(getResources().getColor(R.color.green));
-                break;
-            case QuestionUtility.ANSWER_FOUR:
-                answer4.setBackgroundColor(getResources().getColor(R.color.green));
+            case QuestionUtility.QuestionType.NUMBER:
+                QuizAnswer answer = viewModel.getCorrectAnswer();
+                showNumberAnswer(answer);
                 break;
         }
     }
 
+    private void showNumberAnswer(QuizAnswer answer) {
+        numberSolution.setVisibility(View.VISIBLE);
+        numberSolution.setText(answer.answer);
+    }
+
+    private void markCorrectAnswer(int correct) {
+        switch (correct) {
+            case QuestionUtility.ANSWER_ONE:
+                answer1.setBackgroundColor(getResources().getColor(R.color.green));
+                startBlinking(answer1);
+                break;
+            case QuestionUtility.ANSWER_TWO:
+                answer2.setBackgroundColor(getResources().getColor(R.color.green));
+                startBlinking(answer2);
+                break;
+            case QuestionUtility.ANSWER_THREE:
+                answer3.setBackgroundColor(getResources().getColor(R.color.green));
+                startBlinking(answer3);
+                break;
+            case QuestionUtility.ANSWER_FOUR:
+                answer4.setBackgroundColor(getResources().getColor(R.color.green));
+                startBlinking(answer4);
+                break;
+        }
+    }
+
+    private void startBlinking(Button answer) {
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(500); //You can manage the blinking time with this parameter
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        answer.startAnimation(anim);
+
+        //cancel blink after some time
+        new CountDownTimer(2480, 1000) {
+
+            @SuppressLint("SetTextI18n")
+            public void onTick(long millisUntilFinished) {
+            }
+
+            public void onFinish() {
+                stopBlinking();
+            }
+        }.start();
+    }
+
+    private void stopBlinking() {
+        answer1.clearAnimation();
+        answer2.clearAnimation();
+        answer3.clearAnimation();
+        answer4.clearAnimation();
+    }
+
     private void nextQuestion() {
-        nextQuestionButton.setVisibility(View.GONE);
+        clearData();
         startCounter();
-        showQuestion(viewModel.getNextQuestion());
+        if (viewModel.isQuizFinished()) {
+            showResults();
+        } else {
+            showQuestion(viewModel.getNextQuestion());
+        }
+
+    }
+
+    private void showResults() {
+
+    }
+
+    private void clearData() {
+        clearAnswers();
+        nextQuestionButton.setVisibility(View.GONE);
+        numberSolution.setVisibility(View.INVISIBLE);
+    }
+
+    private void clearAnswers() {
+        stopBlinking();
+        answer1.setBackgroundColor(getResources().getColor(R.color.button_color));
+        answer2.setBackgroundColor(getResources().getColor(R.color.button_color));
+        answer3.setBackgroundColor(getResources().getColor(R.color.button_color));
+        answer4.setBackgroundColor(getResources().getColor(R.color.button_color));
     }
 
     private void showQuestion(QuizQuestion question) {
+        background.setBackground(question.background);
         switch (question.type) {
             case QuestionUtility.QuestionType.MULTI_ANSWERS:
                 showMultiAnswerQuestion(question);
