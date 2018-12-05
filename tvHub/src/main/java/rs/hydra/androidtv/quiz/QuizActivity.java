@@ -54,8 +54,6 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
 
         questionLayout.setVisibility(View.GONE);
         startLayout.setVisibility(View.VISIBLE);
-
-        setUsersList(null);
     }
 
     private void initViews() {
