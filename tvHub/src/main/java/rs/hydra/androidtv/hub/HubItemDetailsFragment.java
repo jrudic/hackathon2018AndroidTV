@@ -30,7 +30,6 @@ import android.support.v17.leanback.widget.HeaderItem;
 import android.support.v17.leanback.widget.ImageCardView;
 import android.support.v17.leanback.widget.ListRow;
 import android.support.v17.leanback.widget.ListRowPresenter;
-import android.support.v17.leanback.widget.OnActionClickedListener;
 import android.support.v17.leanback.widget.OnItemViewClickedListener;
 import android.support.v17.leanback.widget.Presenter;
 import android.support.v17.leanback.widget.Row;
@@ -51,12 +50,14 @@ import rs.hydra.androidtv.quiz.QuizActivity;
 import java.util.Collections;
 import java.util.List;
 
+import static rs.hydra.androidtv.hub.HubList.HUB_CATEGORY;
+
 /*
  * LeanbackDetailsFragment extends DetailsFragment, a Wrapper fragment for leanback details screens.
  * It shows a detailed view of video and its meta plus related videos.
  */
-public class VideoDetailsFragment extends DetailsFragment {
-    private static final String TAG = "VideoDetailsFragment";
+public class HubItemDetailsFragment extends DetailsFragment {
+    private static final String TAG = "HubItemDetailsFragment";
 
     private static final int ACTION_WATCH_TRAILER = 1;
     private static final int ACTION_RENT = 2;
@@ -67,7 +68,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private static final int NUM_COLS = 10;
 
-    private Movie mSelectedMovie;
+    private HubItem mSelectedHubItem;
 
     private ArrayObjectAdapter mAdapter;
     private ClassPresenterSelector mPresenterSelector;
@@ -81,16 +82,16 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         mDetailsBackground = new DetailsFragmentBackgroundController(this);
 
-        mSelectedMovie =
-                (Movie) getActivity().getIntent().getSerializableExtra(DetailsActivity.MOVIE);
-        if (mSelectedMovie != null) {
+        mSelectedHubItem =
+                (HubItem) getActivity().getIntent().getSerializableExtra(DetailsActivity.HUB_ITEM);
+        if (mSelectedHubItem != null) {
             mPresenterSelector = new ClassPresenterSelector();
             mAdapter = new ArrayObjectAdapter(mPresenterSelector);
             setupDetailsOverviewRow();
             setupDetailsOverviewRowPresenter();
             setupRelatedMovieListRow();
             setAdapter(mAdapter);
-            initializeBackground(mSelectedMovie);
+            initializeBackground(mSelectedHubItem);
             setOnItemViewClickedListener(new ItemViewClickedListener());
         } else {
             Intent intent = new Intent(getActivity(), HubActivity.class);
@@ -98,8 +99,9 @@ public class VideoDetailsFragment extends DetailsFragment {
         }
     }
 
-    private void initializeBackground(Movie data) {
+    private void initializeBackground(HubItem data) {
         mDetailsBackground.enableParallax();
+
         Glide.with(getActivity())
                 .load(data.getBackgroundImageUrl())
                 .asBitmap()
@@ -116,14 +118,14 @@ public class VideoDetailsFragment extends DetailsFragment {
     }
 
     private void setupDetailsOverviewRow() {
-        Log.d(TAG, "doInBackground: " + mSelectedMovie.toString());
-        final DetailsOverviewRow row = new DetailsOverviewRow(mSelectedMovie);
+        Log.d(TAG, "doInBackground: " + mSelectedHubItem.toString());
+        final DetailsOverviewRow row = new DetailsOverviewRow(mSelectedHubItem);
         row.setImageDrawable(
                 ContextCompat.getDrawable(getActivity(), R.drawable.default_background));
         int width = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_WIDTH);
         int height = convertDpToPixel(getActivity().getApplicationContext(), DETAIL_THUMB_HEIGHT);
         Glide.with(getActivity())
-                .load(mSelectedMovie.getCardImageUrl())
+                .load(mSelectedHubItem.getCardImageUrl())
                 .centerCrop()
                 .error(R.drawable.default_background)
                 .into(new SimpleTarget<GlideDrawable>(width, height) {
@@ -141,20 +143,27 @@ public class VideoDetailsFragment extends DetailsFragment {
 
         actionAdapter.add(
                 new Action(
-                        ACTION_WATCH_TRAILER, getString(R.string.start_quiz), getString(R.string.demo)));
+                        ACTION_WATCH_TRAILER, getActionTextByCategory(), getString(R.string.demo)));
         actionAdapter.add(
                 new Action(
                         ACTION_RENT,
-                        getResources().getString(R.string.rent_1),
+                        "Full version",
                         getResources().getString(R.string.rent_2)));
-        actionAdapter.add(
-                new Action(
-                        ACTION_BUY,
-                        getResources().getString(R.string.buy_1),
-                        getResources().getString(R.string.buy_2)));
         row.setActionsAdapter(actionAdapter);
 
         mAdapter.add(row);
+    }
+
+    private String getActionTextByCategory() {
+        if (mSelectedHubItem.getCategory().equals(HUB_CATEGORY[0])) {
+            return "Start quiz";
+        } else if (mSelectedHubItem.getCategory().equals(HUB_CATEGORY[1])) {
+            return "Start game";
+        } else if (mSelectedHubItem.getCategory().equals(HUB_CATEGORY[2])) {
+            return "Start";
+        } else {
+            return "Read";
+        }
     }
 
     private void setupDetailsOverviewRowPresenter() {
@@ -162,7 +171,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         FullWidthDetailsOverviewRowPresenter detailsPresenter =
                 new FullWidthDetailsOverviewRowPresenter(new DetailsDescriptionPresenter());
         detailsPresenter.setBackgroundColor(
-                ContextCompat.getColor(getActivity(), R.color.selected_background));
+                ContextCompat.getColor(getActivity(), R.color.primary));
 
         // Hook up transition element.
         FullWidthDetailsOverviewSharedElementHelper sharedElementHelper =
@@ -175,7 +184,7 @@ public class VideoDetailsFragment extends DetailsFragment {
         detailsPresenter.setOnActionClickedListener(action -> {
             if (action.getId() == ACTION_WATCH_TRAILER) {
                 Intent intent = new Intent(getActivity(), QuizActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, mSelectedMovie);
+                intent.putExtra(DetailsActivity.HUB_ITEM, mSelectedHubItem);
                 startActivity(intent);
             } else {
                 Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
@@ -186,7 +195,7 @@ public class VideoDetailsFragment extends DetailsFragment {
 
     private void setupRelatedMovieListRow() {
         String subcategories[] = {getString(R.string.related_movies)};
-        List<Movie> list = MovieList.getList();
+        List<HubItem> list = HubList.getList(mSelectedHubItem.getCategory());
 
         Collections.shuffle(list);
         ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(new CardPresenter());
@@ -212,10 +221,10 @@ public class VideoDetailsFragment extends DetailsFragment {
                 RowPresenter.ViewHolder rowViewHolder,
                 Row row) {
 
-            if (item instanceof Movie) {
+            if (item instanceof HubItem) {
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(getResources().getString(R.string.movie), mSelectedMovie);
+                intent.putExtra(getResources().getString(R.string.hubItem), mSelectedHubItem);
 
                 Bundle bundle =
                         ActivityOptionsCompat.makeSceneTransitionAnimation(

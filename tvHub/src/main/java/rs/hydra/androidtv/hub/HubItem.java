@@ -17,9 +17,9 @@ package rs.hydra.androidtv.hub;
 import java.io.Serializable;
 
 /*
- * Movie class represents video entity with title, description, image thumbs and video url.
+ * HubItem class represents video entity with title, description, image thumbs and video url.
  */
-public class Movie implements Serializable {
+public class HubItem implements Serializable {
     static final long serialVersionUID = 727566175075960653L;
     private long id;
     private String title;
@@ -28,8 +28,9 @@ public class Movie implements Serializable {
     private String cardImageUrl;
     private String videoUrl;
     private String studio;
+    private String category;
 
-    public Movie() {
+    public HubItem() {
     }
 
     public long getId() {
@@ -88,11 +89,20 @@ public class Movie implements Serializable {
         this.cardImageUrl = cardImageUrl;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
-        return "Movie{" +
+        return "HubItem{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", category='" + category + '\'' +
                 ", videoUrl='" + videoUrl + '\'' +
                 ", backgroundImageUrl='" + bgImageUrl + '\'' +
                 ", cardImageUrl='" + cardImageUrl + '\'' +
