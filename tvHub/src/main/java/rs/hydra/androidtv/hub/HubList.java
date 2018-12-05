@@ -156,12 +156,11 @@ public final class HubList {
     private static String[] getCardBacgroundImagesByCategory(String category) {
         if (TextUtils.equals(category, HUB_CATEGORY[0])) {
             String quizBackgroundImages[] = {
-                    "https://ak9.picdn.net/shutterstock/videos/1015889899/thumb/1.jpg",
-                    "https://ak9.picdn.net/shutterstock/videos/1015889899/thumb/1.jpg",
-                    "https://ak9.picdn.net/shutterstock/videos/1015889899/thumb/1.jpg",
-                    "https://ak9.picdn.net/shutterstock/videos/1015889899/thumb/1.jpg",
-                    "https://ak9.picdn.net/shutterstock/videos/1015889899/thumb/1.jpg",
-
+                    "http://www.leadernetworks.com/wp-content/uploads/2017/04/quiz-background-slider.png",
+                    "http://www.leadernetworks.com/wp-content/uploads/2017/04/quiz-background-slider.png",
+                    "http://www.leadernetworks.com/wp-content/uploads/2017/04/quiz-background-slider.png",
+                    "http://www.leadernetworks.com/wp-content/uploads/2017/04/quiz-background-slider.png",
+                    "http://www.leadernetworks.com/wp-content/uploads/2017/04/quiz-background-slider.png",
             };
             return quizBackgroundImages;
         } else if (TextUtils.equals(category, HUB_CATEGORY[1])) {

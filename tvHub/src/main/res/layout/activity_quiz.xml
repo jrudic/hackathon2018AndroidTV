@@ -46,7 +46,7 @@
                   android:padding="@dimen/small_margin"
                   android:gravity="center"
                   android:layout_height="wrap_content"
-                  android:background="@color/white"
+                  android:background="@color/transparent_white"
                   tools:text="Kakvo je ovo pitanje?"
                   android:textSize="@dimen/large_text"
                   android:textColor="@color/black"/>
