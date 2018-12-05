@@ -6,23 +6,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.*;
-import com.bumptech.glide.Glide;
 import rs.hydra.androidtv.R;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
 import rs.hydra.androidtv.quiz.score.ScoreActivity;
+import rs.hydra.androidtv.quiz.user.User;
 
-public class QuizActivity extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class QuizActivity extends FragmentActivity implements QuizInterface {
 
     private static final long QUESTION_TIME = 3000;
 
     private LinearLayout numericAnswersLayout, multiAnswerLayout;
-    private RelativeLayout background;
+    private RelativeLayout questionLayout, startLayout;
+    private LinearLayout backgroundRelativeLayout;
 
     private TextView timer;
     private TextView numberSolution;
@@ -31,6 +37,10 @@ public class QuizActivity extends FragmentActivity {
     private QuizViewModel viewModel;
     private ImageView questionImage;
     private Button nextQuestionButton;
+    private Button startQuiz;
+    private RecyclerView userList;
+
+    private ArrayList<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +51,26 @@ public class QuizActivity extends FragmentActivity {
         viewModel.init(this);
 
         initViews();
-        nextQuestion();
+
+        questionLayout.setVisibility(View.GONE);
+        startLayout.setVisibility(View.VISIBLE);
     }
 
     private void initViews() {
+        userList = findViewById(R.id.userList);
+        userList.setLayoutManager(new LinearLayoutManager(this));
+
         timer = findViewById(R.id.timerTextView);
+        startQuiz = findViewById(R.id.startQuiz);
+        questionLayout = findViewById(R.id.question_layout);
+        startLayout = findViewById(R.id.start_layout);
         questionTitle = findViewById(R.id.questionTitle);
         numericAnswersLayout = findViewById(R.id.numeric_answer_layout);
         multiAnswerLayout = findViewById(R.id.multi_answer_layout);
         questionImage = findViewById(R.id.questionImage);
         nextQuestionButton = findViewById(R.id.nextQuestionButton);
         numberSolution = findViewById(R.id.numberSolution);
-        background = findViewById(R.id.background);
+        backgroundRelativeLayout = findViewById(R.id.backgroundRelativeLayout);
         answer1 = findViewById(R.id.answer1);
         answer2 = findViewById(R.id.answer2);
         answer3 = findViewById(R.id.answer3);
@@ -62,6 +80,13 @@ public class QuizActivity extends FragmentActivity {
 
     private void setupListeners() {
         nextQuestionButton.setOnClickListener(v -> nextQuestion());
+        startQuiz.setOnClickListener(v -> startQuiz());
+    }
+
+    private void startQuiz() {
+        startLayout.setVisibility(View.GONE);
+        questionLayout.setVisibility(View.VISIBLE);
+        nextQuestion();
     }
 
     private void startCounter() {
@@ -154,17 +179,17 @@ public class QuizActivity extends FragmentActivity {
 
     private void nextQuestion() {
         clearData();
-        startCounter();
         if (viewModel.isQuizFinished()) {
             showResults();
         } else {
+            startCounter();
             showQuestion(viewModel.getNextQuestion());
         }
-
     }
 
     private void showResults() {
         Intent intent = new Intent(this, ScoreActivity.class);
+        intent.putParcelableArrayListExtra(ScoreActivity.USERS, users);
         startActivity(intent);
     }
 
@@ -183,7 +208,7 @@ public class QuizActivity extends FragmentActivity {
     }
 
     private void showQuestion(QuizQuestion question) {
-        background.setBackground(question.background);
+        backgroundRelativeLayout.setBackground(question.background);
         switch (question.type) {
             case QuestionUtility.QuestionType.MULTI_ANSWERS:
                 showMultiAnswerQuestion(question);
@@ -208,7 +233,7 @@ public class QuizActivity extends FragmentActivity {
         answer3.setText(question.answers.get(QuestionUtility.ANSWER_THREE).answer);
         answer4.setText(question.answers.get(QuestionUtility.ANSWER_FOUR).answer);
 
-        Glide.with(this).load(question.imageURL).into(questionImage);
+        questionImage.setImageDrawable(question.imageURL);
     }
 
     private void showNumberQuestion(QuizQuestion question) {
@@ -229,5 +254,12 @@ public class QuizActivity extends FragmentActivity {
         answer2.setText(question.answers.get(QuestionUtility.ANSWER_TWO).answer);
         answer3.setText(question.answers.get(QuestionUtility.ANSWER_THREE).answer);
         answer4.setText(question.answers.get(QuestionUtility.ANSWER_FOUR).answer);
+    }
+
+    @Override
+    public void setUsersList(List<User> users) {
+        this.users.clear();
+        this.users.addAll(users);
+        userList.setAdapter(viewModel.getUserAdapter(this, users));
     }
 }

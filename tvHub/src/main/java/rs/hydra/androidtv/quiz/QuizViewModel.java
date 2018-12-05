@@ -2,8 +2,11 @@ package rs.hydra.androidtv.quiz;
 
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
+import rs.hydra.androidtv.quiz.user.User;
+import rs.hydra.androidtv.quiz.user.UserAdapter;
 
 import java.util.List;
 
@@ -41,5 +44,9 @@ public class QuizViewModel extends ViewModel {
 
     public boolean isQuizFinished() {
         return quizQuestions.size() <= currentQuestion;
+    }
+
+    public RecyclerView.Adapter getUserAdapter(Context context, List<User> users) {
+        return new UserAdapter(context, users);
     }
 }

@@ -9,6 +9,6 @@ public class QuizQuestion {
     public String question;
     public List<QuizAnswer> answers;
     public int type;
-    public String imageURL;
+    public Drawable imageURL;
     public Drawable background;
 }

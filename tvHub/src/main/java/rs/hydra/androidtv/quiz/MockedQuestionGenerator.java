@@ -51,7 +51,7 @@ public class MockedQuestionGenerator {
         question6.background = context.getResources().getDrawable(R.drawable.moder);
         question6.question = "Ko se nalazi na slici?";
         question6.type = QuestionUtility.QuestionType.PICTURE;
-        question6.imageURL = "https://www.biography.com/.image/t_share/MTE4MDAzNDEwNTEzMDA0MDQ2/thomas-edison-9284349-1-402.jpg";
+        question6.imageURL = context.getResources().getDrawable(R.drawable.thomas);
         List<QuizAnswer> answers6 = new ArrayList<>();
         answers6.add(new QuizAnswer("Thomas Jefferson", false));
         answers6.add(new QuizAnswer("Thomas Edison", true));
@@ -85,7 +85,7 @@ public class MockedQuestionGenerator {
         question9.background = context.getResources().getDrawable(R.drawable.modern3);
         question9.question = "Ko se nalazi na slici?";
         question9.type = QuestionUtility.QuestionType.PICTURE;
-        question9.imageURL = "https://srpskoblago.rs/wp-content/uploads/2012/07/17.jpg";
+        question9.imageURL = context.getResources().getDrawable(R.drawable.sava);
         List<QuizAnswer> answers9 = new ArrayList<>();
         answers9.add(new QuizAnswer("Sava Sumanovic", true));
         answers9.add(new QuizAnswer("Ivan Radovic", false));
@@ -131,7 +131,7 @@ public class MockedQuestionGenerator {
         question14.background = context.getResources().getDrawable(R.drawable.modern4);
         question14.question = "Ko se nalazi na slici?";
         question14.type = QuestionUtility.QuestionType.PICTURE;
-        question14.imageURL = "https://upload.wikimedia.org/wikipedia/commons/8/89/Boris_Yeltsin_30_November_2001.jpg";
+        question14.imageURL = context.getResources().getDrawable(R.drawable.boris);
         List<QuizAnswer> answers14 = new ArrayList<>();
         answers14.add(new QuizAnswer("Sergej Kirijenko", false));
         answers14.add(new QuizAnswer("Oleg Lobov", false));
