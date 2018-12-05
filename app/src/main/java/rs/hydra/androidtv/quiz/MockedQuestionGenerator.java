@@ -1,5 +1,9 @@
 package rs.hydra.androidtv.quiz;
 
+import rs.hydra.androidtv.quiz.model.QuestionUtility;
+import rs.hydra.androidtv.quiz.model.QuizAnswer;
+import rs.hydra.androidtv.quiz.model.QuizQuestion;
+
 import java.util.ArrayList;
 import java.util.List;
 

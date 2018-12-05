@@ -1,4 +1,4 @@
-package rs.hydra.androidtv.quiz;
+package rs.hydra.androidtv.quiz.model;
 
 import android.support.annotation.IntDef;
 

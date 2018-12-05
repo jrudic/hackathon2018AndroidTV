@@ -1,4 +1,4 @@
-package rs.hydra.androidtv.quiz;
+package rs.hydra.androidtv.quiz.model;
 
 public class QuizAnswer {
 
