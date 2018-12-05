@@ -17,6 +17,12 @@
               android:layout_alignParentEnd="true"
               android:layout_alignParentTop="true"/>
 
+    <Button android:layout_width="wrap_content"
+            android:id="@+id/nextQuestionButton"
+            android:layout_margin="@dimen/large_margin"
+            android:layout_height="wrap_content"
+            android:text="@string/next_question"/>
+
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"

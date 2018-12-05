@@ -53,17 +53,6 @@ public class MockedQuestionGenerator {
         question4.answers = answers4;
         questions.add(question4);
 
-        QuizQuestion question5 = new QuizQuestion();
-        question5.question = "U kojoj se državi nalazi Angkor Wat, najveći hramski / religijski kompleks na svijetu?";
-        question5.type = QuestionUtility.QuestionType.MULTI_ANSWERS;
-        List<QuizAnswer> answers5 = new ArrayList<>();
-        answers5.add(new QuizAnswer("Madrid", false));
-        answers5.add(new QuizAnswer("Veneciju", true));
-        answers5.add(new QuizAnswer("Barselonu", false));
-        answers5.add(new QuizAnswer("Rim", false));
-        question5.answers = answers5;
-        questions.add(question5);
-
         QuizQuestion question6 = new QuizQuestion();
         question6.question = "Ko se nalazi na slici?";
         question6.type = QuestionUtility.QuestionType.PICTURE;
