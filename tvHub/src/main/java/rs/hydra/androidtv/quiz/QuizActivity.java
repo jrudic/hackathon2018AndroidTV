@@ -16,8 +16,12 @@ import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
 import rs.hydra.androidtv.quiz.score.ScoreActivity;
+import rs.hydra.androidtv.quiz.user.User;
 
-public class QuizActivity extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class QuizActivity extends FragmentActivity implements QuizInterface {
 
     private static final long QUESTION_TIME = 3000;
 
@@ -31,6 +35,8 @@ public class QuizActivity extends FragmentActivity {
     private QuizViewModel viewModel;
     private ImageView questionImage;
     private Button nextQuestionButton;
+
+    private ArrayList<User> users = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +171,7 @@ public class QuizActivity extends FragmentActivity {
 
     private void showResults() {
         Intent intent = new Intent(this, ScoreActivity.class);
+        intent.putParcelableArrayListExtra(ScoreActivity.USERS, users);
         startActivity(intent);
     }
 
@@ -229,5 +236,10 @@ public class QuizActivity extends FragmentActivity {
         answer2.setText(question.answers.get(QuestionUtility.ANSWER_TWO).answer);
         answer3.setText(question.answers.get(QuestionUtility.ANSWER_THREE).answer);
         answer4.setText(question.answers.get(QuestionUtility.ANSWER_FOUR).answer);
+    }
+
+    @Override
+    public void setUsersList(List<User> users) {
+        this.users.addAll(users);
     }
 }
