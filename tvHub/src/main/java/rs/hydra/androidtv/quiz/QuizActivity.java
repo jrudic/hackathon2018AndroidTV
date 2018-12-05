@@ -2,6 +2,7 @@ package rs.hydra.androidtv.quiz;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
@@ -14,6 +15,7 @@ import rs.hydra.androidtv.R;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
+import rs.hydra.androidtv.quiz.score.ScoreActivity;
 
 public class QuizActivity extends FragmentActivity {
 
@@ -162,7 +164,8 @@ public class QuizActivity extends FragmentActivity {
     }
 
     private void showResults() {
-
+        Intent intent = new Intent(this, ScoreActivity.class);
+        startActivity(intent);
     }
 
     private void clearData() {

@@ -1,10 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:background="@drawable/winner"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         tools:context=".quiz.score.ScoreActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_margin="@dimen/large_text"
+                  android:orientation="vertical"
+                  android:background="@color/transparent_white"
+                  android:gravity="center"
+                  android:layout_weight="1"
+                  android:padding="@dimen/large_margin"
+                  android:layout_height="match_parent">
+
+        <ImageView android:layout_width="80dp"
+                   android:id="@+id/cupPlayer1"
+                   android:layout_margin="@dimen/small_margin"
+                   android:layout_height="80dp"
+                   android:src="@drawable/cup"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/black"
+                  android:id="@+id/name1"
+                  android:textSize="@dimen/large_text"
+                  android:textAllCaps="true"
+                  tools:text="Djuro Lecic"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/black"
+                  android:id="@+id/points1"
+                  android:layout_margin="@dimen/large_margin"
+                  android:textSize="@dimen/largest_text"
+                  android:textAllCaps="true"
+                  tools:text="9"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/green"
+                  android:layout_margin="@dimen/large_margin"
+                  android:textSize="@dimen/extra_large_text"
+                  android:id="@+id/title1"
+                  android:textStyle="bold"
+                  android:textAllCaps="true"
+                  tools:text="WINNER"/>
+
+    </LinearLayout>
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_margin="@dimen/large_text"
+                  android:orientation="vertical"
+                  android:background="@color/transparent_white"
+                  android:gravity="center"
+                  android:layout_weight="1"
+                  android:padding="@dimen/large_margin"
+                  android:layout_height="match_parent">
+
+        <ImageView android:layout_width="80dp"
+                   android:layout_margin="@dimen/small_margin"
+                   android:layout_height="80dp"
+                   android:id="@+id/cupPlayer2"
+                   android:visibility="invisible"
+                   android:src="@drawable/cup"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/black"
+                  android:id="@+id/name2"
+                  android:textSize="@dimen/large_text"
+                  android:textAllCaps="true"
+                  tools:text="Jovan Rudic"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/black"
+                  android:id="@+id/points2"
+                  android:layout_margin="@dimen/large_margin"
+                  android:textSize="@dimen/largest_text"
+                  android:textAllCaps="true"
+                  tools:text="8"/>
+
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:textColor="@color/red"
+                  android:layout_margin="@dimen/large_margin"
+                  android:id="@+id/title2"
+                  android:textSize="@dimen/extra_large_text"
+                  android:textStyle="bold"
+                  android:textAllCaps="true"
+                  tools:text="LOOSER"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>
