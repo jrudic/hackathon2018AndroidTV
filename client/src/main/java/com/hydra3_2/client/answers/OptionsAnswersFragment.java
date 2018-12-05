@@ -71,7 +71,7 @@ public class OptionsAnswersFragment extends Fragment implements View.OnClickList
 
     public void onButtonPressed(String answer) {
         if (mListener != null) {
-            mListener.onAnswerTyped(answer, 0);
+            mListener.onAnswerChoosed(answer);
         }
     }
 
@@ -136,7 +136,7 @@ public class OptionsAnswersFragment extends Fragment implements View.OnClickList
     }
 
     public interface OnAnswerChoosedListener {
-        void onAnswerTyped(String answer, int answerType);
+        void onAnswerChoosed(String answer);
     }
 
 }

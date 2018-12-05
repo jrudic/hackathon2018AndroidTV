@@ -21,7 +21,7 @@ public class NumberInputAnswersFragment extends Fragment implements View.OnClick
     private String question;
     private TextView questionTextView;
     private OnAnswerTypedListener mListener;
-    private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, butn8, butn9, btnClear;
+    private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, butn8, butn9, btnClear, btnOk;
 
     private String inputText = "";
     private EditText inputTextView;
@@ -73,6 +73,7 @@ public class NumberInputAnswersFragment extends Fragment implements View.OnClick
         butn8 = view.findViewById(R.id.numberEight);
         butn9 = view.findViewById(R.id.numberNine);
         btnClear = view.findViewById(R.id.buttonClear);
+        btnOk = view.findViewById(R.id.buttonOk);
 
         btn0.setOnClickListener(this);
         btn1.setOnClickListener(this);
@@ -85,6 +86,7 @@ public class NumberInputAnswersFragment extends Fragment implements View.OnClick
         butn8.setOnClickListener(this);
         butn9.setOnClickListener(this);
         btnClear.setOnClickListener(this);
+        btnOk.setOnClickListener(this);
     }
 
     public void onButtonPressed(String answer) {
@@ -145,6 +147,9 @@ public class NumberInputAnswersFragment extends Fragment implements View.OnClick
                 break;
             case R.id.buttonClear:
                 clearText();
+                break;
+            case R.id.buttonOk:
+                onButtonPressed(inputText);
                 break;
             default:
                 break;

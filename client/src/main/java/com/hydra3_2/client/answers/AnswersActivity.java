@@ -59,7 +59,7 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
     }
 
     @Override
-    public void onAnswerTyped(String answer, int answerType) {
+    public void onAnswerChoosed(String answer) {
         displayNumberInputAnswerScreen();
     }
 
