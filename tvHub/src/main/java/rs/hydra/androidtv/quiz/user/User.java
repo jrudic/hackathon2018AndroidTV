@@ -1,9 +1,9 @@
 package rs.hydra.androidtv.quiz.user;
 
-public interface User {
+public class User {
 
-    String uuid = null;
-    String name = null;
-    int points = 0;
+    public String uuid = null;
+    public String name = null;
+    public int points = 0;
 
 }
