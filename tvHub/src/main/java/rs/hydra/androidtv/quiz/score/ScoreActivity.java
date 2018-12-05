@@ -26,7 +26,7 @@ public class ScoreActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_score);
 
-        users = getIntent().getParcelableArrayListExtra(USERS);
+        users = getIntent().getExtras().getParcelableArrayList(USERS);
 
         initView();
         showWinner(users);
@@ -48,8 +48,8 @@ public class ScoreActivity extends FragmentActivity {
             title1.setText("LOOSER");
             title1.setTextColor(getResources().getColor(R.color.red));
         }
-        point1.setText(user.get(0).points);
-        point2.setText(user.get(1).points);
+        point1.setText(String.format("%d", user.get(0).points));
+        point2.setText(String.format("%d", user.get(1).points));
         name1.setText(user.get(0).name);
         name2.setText(user.get(1).name);
     }

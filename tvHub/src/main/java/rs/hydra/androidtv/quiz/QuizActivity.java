@@ -54,6 +54,8 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
 
         questionLayout.setVisibility(View.GONE);
         startLayout.setVisibility(View.VISIBLE);
+
+        setUsersList(null);
     }
 
     private void initViews() {
@@ -189,7 +191,9 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
 
     private void showResults() {
         Intent intent = new Intent(this, ScoreActivity.class);
-        intent.putParcelableArrayListExtra(ScoreActivity.USERS, users);
+        Bundle bnd = new Bundle();
+        bnd.putParcelableArrayList(ScoreActivity.USERS, users);
+        intent.putExtras(bnd);
         startActivity(intent);
     }
 
@@ -260,6 +264,6 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
     public void setUsersList(List<User> users) {
         this.users.clear();
         this.users.addAll(users);
-        userList.setAdapter(viewModel.getUserAdapter(this, users));
+        userList.setAdapter(viewModel.getUserAdapter(this, this.users));
     }
 }

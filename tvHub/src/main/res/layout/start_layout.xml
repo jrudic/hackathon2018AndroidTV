@@ -29,6 +29,12 @@
                   android:layout_margin="@dimen/small_margin"
                   android:layout_height="wrap_content"/>
 
+        <View android:layout_width="match_parent"
+              android:background="@color/gray"
+              android:layout_marginLeft="@dimen/small_margin"
+              android:layout_marginRight="@dimen/small_margin"
+              android:layout_height="1dp"/>
+
         <android.support.v7.widget.RecyclerView
                 android:layout_margin="@dimen/small_margin"
                 android:id="@+id/userList"

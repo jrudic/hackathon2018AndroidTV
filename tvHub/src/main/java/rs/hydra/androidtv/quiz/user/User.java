@@ -24,6 +24,12 @@ public class User implements Parcelable {
     public User() {
     }
 
+    public User(String uuid, String name, int points) {
+        this.uuid = uuid;
+        this.name = name;
+        this.points = points;
+    }
+
     protected User(Parcel in) {
         this.uuid = in.readString();
         this.name = in.readString();
