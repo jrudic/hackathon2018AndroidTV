@@ -7,8 +7,10 @@ import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.bumptech.glide.Glide;
 import rs.hydra.androidtv.R;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
@@ -23,6 +25,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView questionTitle;
     private Button answer1, answer2, answer3, answer4;
     private QuizViewModel viewModel;
+    private ImageView questionImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class QuizActivity extends AppCompatActivity {
         questionTitle = findViewById(R.id.questionTitle);
         numericAnswersLayout = findViewById(R.id.numeric_answer_layout);
         multiAnsverLayout = findViewById(R.id.multi_answer_layout);
+        questionImage = findViewById(R.id.questionImage);
         answer1 = findViewById(R.id.answer1);
         answer2 = findViewById(R.id.answer2);
         answer3 = findViewById(R.id.answer3);
@@ -83,17 +87,28 @@ public class QuizActivity extends AppCompatActivity {
 
     private void showPictureQuestion(QuizQuestion question) {
         numericAnswersLayout.setVisibility(View.GONE);
+        questionImage.setVisibility(View.VISIBLE);
         multiAnsverLayout.setVisibility(View.VISIBLE);
 
+        questionTitle.setText(question.question);
+        answer1.setText(question.answers.get(QuestionUtility.ANSWER_ONE).answer);
+        answer2.setText(question.answers.get(QuestionUtility.ANSWER_TWO).answer);
+        answer3.setText(question.answers.get(QuestionUtility.ANSWER_THREE).answer);
+        answer4.setText(question.answers.get(QuestionUtility.ANSWER_FOUR).answer);
+
+        Glide.with(questionImage).load(question.imageURL).into(questionImage);
     }
 
     private void showNumberQuestion(QuizQuestion question) {
         numericAnswersLayout.setVisibility(View.GONE);
+        questionImage.setVisibility(View.GONE);
         multiAnsverLayout.setVisibility(View.VISIBLE);
 
+        questionTitle.setText(question.question);
     }
 
     private void showMultiAnswerQuestion(QuizQuestion question) {
+        questionImage.setVisibility(View.GONE);
         numericAnswersLayout.setVisibility(View.GONE);
         multiAnsverLayout.setVisibility(View.VISIBLE);
 
