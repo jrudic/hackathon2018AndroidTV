@@ -54,7 +54,6 @@ dependencies {
 
     // optional - Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 
     implementation 'com.github.bumptech.glide:glide:3.8.0'
 

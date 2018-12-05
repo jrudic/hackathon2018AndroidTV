@@ -10,13 +10,22 @@ public class QuizViewModel extends ViewModel {
     private List<QuizQuestion> quizQuestions;
     private int currentQuestion = 0;
 
-    public void init() {
+    void init() {
         quizQuestions = MockedQuestionGenerator.getMockedQuestions();
     }
 
-    public QuizQuestion getNextQuestion() {
+    QuizQuestion getNextQuestion() {
         QuizQuestion question = quizQuestions.get(currentQuestion);
         currentQuestion++;
         return question;
+    }
+
+    int getCorrectAnswer() {
+        for (int i = 0; i < quizQuestions.get(currentQuestion - 1).answers.size(); i++) {
+            if (quizQuestions.get(currentQuestion - 1).answers.get(i).isCorrect) {
+                return i;
+            }
+        }
+        return 0;
     }
 }
