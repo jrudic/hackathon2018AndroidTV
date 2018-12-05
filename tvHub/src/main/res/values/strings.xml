@@ -22,7 +22,6 @@
     <string name="enter_number">Unesite broj:</string>
     <string name="next_question">Next</string>
     <string name="user_list">Lista takmicara:</string>
-    <string name="connected">connected</string>
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="label_data">Data:</string>
     <string name="label_device_address">Device address:</string>
