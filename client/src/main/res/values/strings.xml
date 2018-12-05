@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">client</string>
+    <string name="hydra_hub_app_name">Hydra Entertainment Hub</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="connect">Connect</string>
+    <string name="username">Username</string>
+    <string name="profile_name_error_msg">Please enter your profile name</string>
 </resources>
