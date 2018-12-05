@@ -4,6 +4,7 @@
           package="rs.hydra.androidtv"
           tools:ignore="ImpliedTouchscreenHardware,MissingLeanbackLauncher">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-feature
             android:name="android.software.leanback"
             android:required="true"/>

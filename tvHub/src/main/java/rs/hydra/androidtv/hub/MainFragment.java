@@ -36,7 +36,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,10 +46,9 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import rs.hydra.androidtv.R;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
+import static rs.hydra.androidtv.hub.HubList.HUB_CATEGORY;
 
 public class MainFragment extends BrowseFragment {
     private static final String TAG = "MainFragment";
@@ -92,21 +90,31 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void loadRows() {
-        List<Movie> list = MovieList.setupMovies();
+
+        List<HubItem> listOfQUizzes = HubList.setupItems(HUB_CATEGORY[0]);
+        List<HubItem> listOfBoardGames = HubList.setupItems(HUB_CATEGORY[1]);
+        List<HubItem> listOfKidsGames = HubList.setupItems(HUB_CATEGORY[2]);
+        List<HubItem> listOfBooks = HubList.setupItems(HUB_CATEGORY[3]);
+
+        List<List<HubItem>> allItems = new ArrayList<>();
+        allItems.add(listOfQUizzes);
+        allItems.add(listOfBoardGames);
+        allItems.add(listOfKidsGames);
+        allItems.add(listOfBooks);
 
         ArrayObjectAdapter rowsAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         CardPresenter cardPresenter = new CardPresenter();
 
         int i;
-        for (i = 0; i < NUM_ROWS; i++) {
+        for (i = 0; i < allItems.size(); i++) {
             if (i != 0) {
-                Collections.shuffle(list);
+                Collections.shuffle(allItems.get(i));
             }
             ArrayObjectAdapter listRowAdapter = new ArrayObjectAdapter(cardPresenter);
-            for (int j = 0; j < NUM_COLS; j++) {
-                listRowAdapter.add(list.get(j % 5));
+            for (int j = 0; j < allItems.get(i).size(); j++) {
+                listRowAdapter.add(allItems.get(i).get(j % 5));
             }
-            HeaderItem header = new HeaderItem(i, MovieList.MOVIE_CATEGORY[i]);
+            HeaderItem header = new HeaderItem(i, HUB_CATEGORY[i]);
             rowsAdapter.add(new ListRow(header, listRowAdapter));
         }
 
@@ -114,8 +122,7 @@ public class MainFragment extends BrowseFragment {
 
         GridItemPresenter mGridPresenter = new GridItemPresenter();
         ArrayObjectAdapter gridRowAdapter = new ArrayObjectAdapter(mGridPresenter);
-        gridRowAdapter.add(getResources().getString(R.string.grid_view));
-        gridRowAdapter.add(getString(R.string.error_fragment));
+        gridRowAdapter.add("Devices");
         gridRowAdapter.add(getResources().getString(R.string.personal_settings));
         rowsAdapter.add(new ListRow(gridHeader, gridRowAdapter));
 
@@ -133,28 +140,23 @@ public class MainFragment extends BrowseFragment {
     }
 
     private void setupUIElements() {
-        // setBadgeDrawable(getActivity().getResources().getDrawable(
-        // R.drawable.videos_by_google_banner));
+        setBadgeDrawable(getActivity().getResources().getDrawable(
+                R.mipmap.ic_launcher));
         setTitle("Hydra Entertainment Hub"); // Badge, when set, takes precedent
         // over title
         setHeadersState(HEADERS_ENABLED);
         setHeadersTransitionOnBackEnabled(true);
 
         // set fastLane (or headers) background color
-        setBrandColor(ContextCompat.getColor(getActivity(), R.color.fastlane_background));
+        setBrandColor(ContextCompat.getColor(getActivity(), R.color.primary));
         // set search icon color
-        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.search_opaque));
+        setSearchAffordanceColor(ContextCompat.getColor(getActivity(), R.color.primary_dark));
     }
 
     private void setupEventListeners() {
-        setOnSearchClickedListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
+        setOnSearchClickedListener(view ->
                 Toast.makeText(getActivity(), "Implement your own in-app search", Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
+                        .show());
 
         setOnItemViewClickedListener(new ItemViewClickedListener());
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
@@ -191,11 +193,11 @@ public class MainFragment extends BrowseFragment {
         public void onItemClicked(Presenter.ViewHolder itemViewHolder, Object item,
                                   RowPresenter.ViewHolder rowViewHolder, Row row) {
 
-            if (item instanceof Movie) {
-                Movie movie = (Movie) item;
+            if (item instanceof HubItem) {
+                HubItem hubItem = (HubItem) item;
                 Log.d(TAG, "Item: " + item.toString());
                 Intent intent = new Intent(getActivity(), DetailsActivity.class);
-                intent.putExtra(DetailsActivity.MOVIE, movie);
+                intent.putExtra(DetailsActivity.HUB_ITEM, hubItem);
 
                 Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         getActivity(),
@@ -221,8 +223,8 @@ public class MainFragment extends BrowseFragment {
                 Object item,
                 RowPresenter.ViewHolder rowViewHolder,
                 Row row) {
-            if (item instanceof Movie) {
-                mBackgroundUri = ((Movie) item).getBackgroundImageUrl();
+            if (item instanceof HubItem) {
+                mBackgroundUri = ((HubItem) item).getBackgroundImageUrl();
                 startBackgroundTimer();
             }
         }
@@ -232,12 +234,7 @@ public class MainFragment extends BrowseFragment {
 
         @Override
         public void run() {
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    updateBackground(mBackgroundUri);
-                }
-            });
+            mHandler.post(() -> updateBackground(mBackgroundUri));
         }
     }
 

@@ -2,7 +2,7 @@
     <string name="app_name">AndroidTV</string>
     <string name="title_activity_hub">Leanback HubActivity Title</string>
     <string name="browse_title"><![CDATA[Videos by Your Company]]></string>
-    <string name="related_movies">Related Videos</string>
+    <string name="related_movies">Related</string>
     <string name="grid_view">Grid View</string>
     <string name="error_fragment">Error Fragment</string>
     <string name="personal_settings">Personal Settings</string>
@@ -12,7 +12,7 @@
     <string name="rent_2">From $1.99</string>
     <string name="buy_1">Buy and Own</string>
     <string name="buy_2">AT $9.99</string>
-    <string name="movie">Movie</string>
+    <string name="hubItem">Movie</string>
 
     <!-- Error messages -->
     <string name="error_fragment_message">An error occurred</string>

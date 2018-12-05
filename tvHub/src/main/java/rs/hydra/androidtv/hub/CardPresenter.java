@@ -52,13 +52,13 @@ public class CardPresenter extends Presenter {
         sDefaultBackgroundColor =
                 ContextCompat.getColor(parent.getContext(), R.color.default_background);
         sSelectedBackgroundColor =
-                ContextCompat.getColor(parent.getContext(), R.color.selected_background);
+                ContextCompat.getColor(parent.getContext(), R.color.primary_dark);
         /*
          * This template uses a default image in res/drawable, but the general case for Android TV
          * will require your resources in xhdpi. For more information, see
          * https://developer.android.com/training/tv/start/layouts.html#density-resources
          */
-        mDefaultCardImage = ContextCompat.getDrawable(parent.getContext(), R.drawable.movie);
+        mDefaultCardImage = ContextCompat.getDrawable(parent.getContext(), R.drawable.quiz6);
 
         ImageCardView cardView =
                 new ImageCardView(parent.getContext()) {
@@ -77,16 +77,16 @@ public class CardPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        Movie movie = (Movie) item;
+        HubItem hubItem = (HubItem) item;
         ImageCardView cardView = (ImageCardView) viewHolder.view;
 
         Log.d(TAG, "onBindViewHolder");
-        if (movie.getCardImageUrl() != null) {
-            cardView.setTitleText(movie.getTitle());
-            cardView.setContentText(movie.getStudio());
+        if (hubItem.getCardImageUrl() != null) {
+            cardView.setTitleText(hubItem.getTitle());
+            cardView.setContentText(hubItem.getStudio());
             cardView.setMainImageDimensions(CARD_WIDTH, CARD_HEIGHT);
             Glide.with(viewHolder.view.getContext())
-                    .load(movie.getCardImageUrl())
+                    .load(hubItem.getCardImageUrl())
                     .centerCrop()
                     .error(mDefaultCardImage)
                     .into(cardView.getMainImageView());
