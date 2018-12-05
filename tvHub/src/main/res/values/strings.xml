@@ -19,6 +19,6 @@
     <string name="dismiss_error">Dismiss</string>
     <string name="start_quiz">START QUIZ</string>
     <string name="demo">DEMO</string>
-    <string name="enter_number">Uneite broj:</string>
+    <string name="enter_number">Unesite broj:</string>
     <string name="next_question">Next</string>
 </resources>

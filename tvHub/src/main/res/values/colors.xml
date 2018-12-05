@@ -13,6 +13,7 @@
     <color name="black">#000</color>
     <color name="gray">#989898</color>
     <color name="green">#2E8B57</color>
+    <color name="button_color">@color/primary_dark</color>
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>
     <color name="fastlane_background">#0096a6</color>
