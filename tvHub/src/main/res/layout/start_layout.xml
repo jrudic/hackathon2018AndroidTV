@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@drawable/modern4"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:background="@color/transparent_white"
+                  android:layout_marginLeft="@dimen/extra_large_margin"
+                  android:layout_marginRight="@dimen/extra_large_margin"
+                  android:layout_marginTop="@dimen/large_margin"
+                  android:layout_marginBottom="@dimen/large_margin">
+
+        <Button android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/startQuiz"
+                android:textSize="@dimen/large_text"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/large_margin"
+                android:text="@string/start_quiz"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:text="@string/user_list"
+                  android:textSize="@dimen/medium_text"
+                  android:textColor="@color/black"
+                  android:layout_margin="@dimen/small_margin"
+                  android:layout_height="wrap_content"/>
+
+        <android.support.v7.widget.RecyclerView
+                android:layout_margin="@dimen/small_margin"
+                android:id="@+id/userList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
+
+</RelativeLayout>

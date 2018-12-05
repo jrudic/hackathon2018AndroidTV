@@ -6,6 +6,8 @@
     <dimen name="extra_large_text">36sp</dimen>
     <dimen name="largest_text">46sp</dimen>
     <dimen name="medium_text">22sp</dimen>
+    <dimen name="small_text">18sp</dimen>
     <dimen name="extra_small_margin">5dp</dimen>
     <dimen name="small_margin">12dp</dimen>
+    <dimen name="extra_large_margin">50dp</dimen>
 </resources>
