@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         profileNameInput = findViewById(R.id.nameInput);
         connectButton = findViewById(R.id.connectButton);
         String profileName = PreferenceUtility.getUsername(this);
-        if (TextUtils.isEmpty(profileName)) {
+        if (!TextUtils.isEmpty(profileName)) {
             profileNameInput.setText(profileName);
         }
         connectButton.setOnClickListener(new View.OnClickListener() {
