@@ -30,7 +30,6 @@
                   android:padding="@dimen/extra_small_margin"
                   android:gravity="center"
                   android:layout_above="@+id/multi_answer_layout"
-                  android:id="@+id/question_layout"
                   android:layout_below="@+id/timerTextView"
                   android:orientation="vertical">
 
