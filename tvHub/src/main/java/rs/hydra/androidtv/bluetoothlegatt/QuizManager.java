@@ -20,7 +20,7 @@ public class QuizManager {
 
     public String currentCorrectAnswer;
 
-    public static synchronized QuizManager getInstance() {
+    public static QuizManager getInstance() {
         if (sInsatance == null) {
             return new QuizManager();
         }
@@ -30,7 +30,7 @@ public class QuizManager {
     private QuizManager() {
     }
 
-    public synchronized void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
+    public void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
         usersServicesHashMap.put(deviceUid, gatt);
     }
     public void removeConnectedGatServiceForDevice(String deviceUid) {
