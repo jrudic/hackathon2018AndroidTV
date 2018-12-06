@@ -31,9 +31,6 @@ public final class HubList {
     private static long count = 0;
 
     public static List<HubItem> getList(String category) {
-//        if (list == null) {
-//            list = setupItems(category);
-//        }
         list = setupItems(category);
 
         return list;
@@ -85,7 +82,7 @@ public final class HubList {
             String quizTitles[] = {
                     "Home Pub Quiz",
                     "Slagalica",
-                    "Quiz Three...",
+                    "Conquiztador",
                     "Quiz Four...",
                     "Milioner"
             };
@@ -198,7 +195,7 @@ public final class HubList {
             String quizImages[] = {
                     "https://i.imgur.com/RvQ96TO.jpg",
                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_p5JUwvD80XJc2Z7v4Yq4dcMsOkUfylJXEujjyIQ4pDyC0oYU",
-                    "https://i.imgur.com/oSi4hog.jpg",
+                    "https://i.ytimg.com/vi/GfdpZvzJr4I/maxresdefault.jpg",
                     "https://i.imgur.com/yTWgOdn.jpg",
                     "https://upload.wikimedia.org/wikipedia/sh/2/23/Milioner_logo.jpg"
             };

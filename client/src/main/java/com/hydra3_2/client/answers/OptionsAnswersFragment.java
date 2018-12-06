@@ -108,10 +108,12 @@ public class OptionsAnswersFragment extends Fragment implements View.OnClickList
             case R.id.buttonC:
                 invalidateButtons();
                 setSelection(buttonC);
+                onButtonPressed("C");
                 break;
             case R.id.buttonD:
                 invalidateButtons();
                 setSelection(buttonD);
+                onButtonPressed("D");
                 break;
             default:
                 break;
