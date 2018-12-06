@@ -44,6 +44,11 @@ public class User implements Parcelable {
         this.deviceName = deviceName;
     }
 
+    public User(String deviceName, String name, int points) {
+        this.deviceName = deviceName;
+        this.name = name;
+        this.points = points;
+    }
 
     protected User(Parcel in) {
         this.deviceName = in.readString();
