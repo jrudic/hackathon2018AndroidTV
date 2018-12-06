@@ -14,4 +14,8 @@
     <string name="c">C</string>
     <string name="d">D</string>
     <string name="unesite_tacan_odgovor">Unesite tacan odgovor:</string>
+    <string name="finish">finish</string>
+    <string name="you_won">You Won</string>
+    <string name="the_end">The End</string>
+    <string name="play_again">Play again</string>
 </resources>
