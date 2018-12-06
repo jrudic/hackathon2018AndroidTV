@@ -13,11 +13,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import com.hydra3_2.client.R;
 
+import static com.hydra3_2.client.answers.AnswersActivity.QUESTION_KEY;
+
 
 public class OptionsAnswersFragment extends Fragment implements View.OnClickListener {
     public static final String TAG = "OptionsAnswersFragment";
     // TODO: Rename parameter arguments, choose names that match
-    private static final String QUESTION_KEY = "question_key";
 
     private String question;
     private TextView questionTextView;
