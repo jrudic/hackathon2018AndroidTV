@@ -27,18 +27,8 @@ public class ScoreActivity extends FragmentActivity {
         setContentView(R.layout.activity_score);
 
         users = getIntent().getExtras().getParcelableArrayList(USERS);
-        if (users != null) {
-            if (users.size() == 1) {
-                users.add(new User("device 2", "device 2", 1));
-            }
-
-            if (users.get(0).points == 0) {
-                users.get(0).points = 6;
-            }
-        } else {
-            users.add(new User("device 1", "device 1", 7));
-            users.add(new User("device 2", "device 2", 9));
-        }
+        users.add(new User("Hydra", "Hydra", 5));
+        users.add(new User("test", "test", 4));
 
         initView();
         showWinner(users);
