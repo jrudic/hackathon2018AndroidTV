@@ -3,14 +3,12 @@ package rs.hydra.androidtv.bluetoothlegatt;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import rs.hydra.androidtv.quiz.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class QuizManager {
 
@@ -22,7 +20,7 @@ public class QuizManager {
 
     public String currentCorrectAnswer;
 
-    public static QuizManager getInstance() {
+    public static synchronized QuizManager getInstance() {
         if (sInsatance == null) {
             return new QuizManager();
         }
@@ -32,7 +30,7 @@ public class QuizManager {
     private QuizManager() {
     }
 
-    public void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
+    public synchronized void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
         usersServicesHashMap.put(deviceUid, gatt);
     }
     public void removeConnectedGatServiceForDevice(String deviceUid) {
