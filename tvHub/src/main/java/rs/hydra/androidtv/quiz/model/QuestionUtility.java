@@ -15,8 +15,23 @@ public class QuestionUtility {
     @IntDef({QuestionType.MULTI_ANSWERS, QuestionType.PICTURE, QuestionType.NUMBER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface QuestionType {
-        int MULTI_ANSWERS = 1;
-        int PICTURE = 2;
-        int NUMBER = 3;
+        int MULTI_ANSWERS = 0;
+        int PICTURE = 1;
+        int NUMBER = 2;
+        int FINISHED = 3;
+    }
+
+    public static int getClientQuestionType(int type) {
+        switch (type) {
+            case QuestionType.MULTI_ANSWERS:
+            case QuestionType.PICTURE:
+                return 0;
+            case QuestionType.NUMBER:
+                return 1;
+            case QuestionType.FINISHED:
+                return 2;
+            default:
+                return 0;
+        }
     }
 }
