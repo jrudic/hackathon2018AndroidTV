@@ -10,12 +10,11 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.ParcelUuid;
+import android.content.ServiceConnection;
+import android.os.*;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +23,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.*;
 import rs.hydra.androidtv.R;
+import rs.hydra.androidtv.bluetoothlegatt.BluetoothLeService;
+import rs.hydra.androidtv.bluetoothlegatt.QuizManager;
 import rs.hydra.androidtv.bluetoothlegatt.SampleGattAttributes;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
@@ -51,10 +52,11 @@ public class QuizActivity extends FragmentActivity {
     private Button startQuiz;
     private RecyclerView userList;
 
-    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<User> discoveredUsers = new ArrayList<>();
 
     //Bloototh stuff
     private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothLeService mBluetoothLeService;
     private boolean mScanning;
     private Handler mHandler;
     private static final int REQUEST_ENABLE_BT = 1;
@@ -82,6 +84,8 @@ public class QuizActivity extends FragmentActivity {
 
         questionLayout.setVisibility(View.GONE);
         startLayout.setVisibility(View.VISIBLE);
+        Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
+        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
     }
 
     private void initViews() {
@@ -126,6 +130,7 @@ public class QuizActivity extends FragmentActivity {
             }
 
             public void onFinish() {
+                QuizManager.getInstance().readAnswers();
                 showSolution();
             }
         }.start();
@@ -212,13 +217,14 @@ public class QuizActivity extends FragmentActivity {
         } else {
             startCounter();
             showQuestion(viewModel.getNextQuestion());
+            QuizManager.getInstance().currentCorrectAnswer = viewModel.getCorrectAnswer().answer;
         }
     }
 
     private void showResults() {
         Intent intent = new Intent(this, ScoreActivity.class);
         Bundle bnd = new Bundle();
-        bnd.putParcelableArrayList(ScoreActivity.USERS, users);
+        bnd.putParcelableArrayList(ScoreActivity.USERS, QuizManager.getInstance().getAllUsers());
         intent.putExtras(bnd);
         startActivity(intent);
     }
@@ -298,8 +304,6 @@ public class QuizActivity extends FragmentActivity {
                 startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             }
         }
-
-        scanLeDevice(true);
     }
 
     @Override
@@ -333,7 +337,7 @@ public class QuizActivity extends FragmentActivity {
             new ScanCallback() {
                 public void onScanResult(int callbackType, ScanResult result) {
                     final BluetoothDevice device = result.getDevice();
-                    runOnUiThread(() -> addUser(new User(device.getAddress(), device.getName())));
+                    runOnUiThread(() -> addUser(device));
                 }
             };
 
@@ -347,10 +351,31 @@ public class QuizActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void addUser(User users) {
-        if (!this.users.contains(users)) {
-            this.users.add(users);
-            userList.setAdapter(viewModel.getUserAdapter(this, this.users));
+    public void addUser(BluetoothDevice device) {
+        User newUser = new User(device.getName());
+        if (!this.discoveredUsers.contains(newUser)) {
+            mBluetoothLeService.connect(device.getAddress());
+            QuizManager.getInstance().addUserForDevice(device.getAddress());
+            this.discoveredUsers.add(newUser);
+            userList.setAdapter(viewModel.getUserAdapter(this, this.discoveredUsers));
         }
     }
+    // Code to manage Service lifecycle.
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            mBluetoothLeService = ((BluetoothLeService.LocalBinder) service).getService();
+            if (!mBluetoothLeService.initialize()) {
+                finish();
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            scanLeDevice(true);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBluetoothLeService = null;
+        }
+    };
 }

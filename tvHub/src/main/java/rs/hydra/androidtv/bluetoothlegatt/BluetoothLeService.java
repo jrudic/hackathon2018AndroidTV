@@ -71,87 +71,95 @@ public class BluetoothLeService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                QuizManager.getInstance().addConnectedGatServiceForDevice(gatt.getDevice().getAddress(),gatt);
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
-                broadcastUpdate(intentAction);
+//                broadcastUpdate(intentAction);
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" +
                         mBluetoothGatt.discoverServices());
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                QuizManager.getInstance().removeConnectedGatServiceForDevice(gatt.getDevice().getAddress());
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);
+//                broadcastUpdate(intentAction);
             }
         }
 
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-            } else {
-                Log.w(TAG, "onServicesDiscovered received: " + status);
-            }
-        }
+//        @Override
+//        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+//            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+//            } else {
+//                Log.w(TAG, "onServicesDiscovered received: " + status);
+//            }
+//        }
 
         @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                QuizManager.getInstance().handleChangeCharacteristicForGatt(gatt,characteristic);
+//                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
+        }
+
+        @Override
+        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+            super.onCharacteristicWrite(gatt, characteristic, status);
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+//            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
         }
     };
-
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        sendBroadcast(intent);
-    }
-
-    private void broadcastUpdate(final String action,
-                                 final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
-
-        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
-        // carried out as per profile specifications:
-        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (SampleGattAttributes.ANSWER_CLIENT_CHARACTERISTIC.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-                Log.d(TAG, "Heart rate format UINT16.");
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-                Log.d(TAG, "Heart rate format UINT8.");
-            }
-            final String heartRate = characteristic.getStringValue(0);
-//            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
-            intent.putExtra(EXTRA_DATA, heartRate);
-        } else {
-            // For all other profiles, writes the data formatted in HEX.
-            final byte[] data = characteristic.getValue();
-            if (data != null && data.length > 0) {
-                final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
-                    stringBuilder.append(String.format("%02X ", byteChar));
-                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
-            }
-        }
-        sendBroadcast(intent);
-    }
+//
+//    private void broadcastUpdate(final String action) {
+//        final Intent intent = new Intent(action);
+//        sendBroadcast(intent);
+//    }
+//
+//    private void broadcastUpdate(final String action,
+//                                 final BluetoothGattCharacteristic characteristic) {
+//        final Intent intent = new Intent(action);
+//
+//        // This is special handling for the Heart Rate Measurement profile.  Data parsing is
+//        // carried out as per profile specifications:
+//        // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
+//        if (SampleGattAttributes.ANSWER_CLIENT_CHARACTERISTIC.equals(characteristic.getUuid())) {
+//            int flag = characteristic.getProperties();
+//            int format = -1;
+//            if ((flag & 0x01) != 0) {
+//                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+//                Log.d(TAG, "Heart rate format UINT16.");
+//            } else {
+//                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+//                Log.d(TAG, "Heart rate format UINT8.");
+//            }
+//            final String heartRate = characteristic.getStringValue(0);
+////            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+//            intent.putExtra(EXTRA_DATA, heartRate);
+//        } else {
+//            // For all other profiles, writes the data formatted in HEX.
+//            final byte[] data = characteristic.getValue();
+//            if (data != null && data.length > 0) {
+//                final StringBuilder stringBuilder = new StringBuilder(data.length);
+//                for(byte byteChar : data)
+//                    stringBuilder.append(String.format("%02X ", byteChar));
+//                intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+//            }
+//        }
+//        sendBroadcast(intent);
+//    }
 
     public class LocalBinder extends Binder {
-        BluetoothLeService getService() {
+        public BluetoothLeService getService() {
             return BluetoothLeService.this;
         }
     }

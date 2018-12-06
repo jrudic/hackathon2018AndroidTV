@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 public class User implements Parcelable {
 
-    public String uuid = null;
+    public String deviceName = null;
     public String name = null;
     public int points = 0;
 
@@ -17,7 +17,7 @@ public class User implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.uuid);
+        dest.writeString(this.deviceName);
         dest.writeString(this.name);
         dest.writeInt(this.points);
     }
@@ -29,32 +29,29 @@ public class User implements Parcelable {
         }
         User user = (User) o;
 
-        return TextUtils.equals(uuid, user.uuid);
+        return TextUtils.equals(deviceName, user.deviceName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return deviceName.hashCode();
     }
 
     public User() {
     }
 
-    public User(String uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
+    public User( String deviceName) {
+        this.deviceName = deviceName;
     }
 
-    public User(String uuid, String name, int points) {
-        this.uuid = uuid;
-        this.name = name;
-        this.points = points;
-    }
 
     protected User(Parcel in) {
-        this.uuid = in.readString();
         this.name = in.readString();
         this.points = in.readInt();
+    }
+
+    public void increaseScore(){
+        points++;
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
