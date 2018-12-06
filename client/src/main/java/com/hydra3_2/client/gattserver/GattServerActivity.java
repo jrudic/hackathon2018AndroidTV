@@ -85,6 +85,7 @@ public class GattServerActivity extends Activity {
             startAdvertising();
             startServer();
         }
+        updateUi();
     }
 
 
@@ -142,7 +143,6 @@ public class GattServerActivity extends Activity {
                 default:
                     // Do nothing
             }
-
         }
     };
 
@@ -196,9 +196,6 @@ public class GattServerActivity extends Activity {
         }
 
         mBluetoothGattServer.addService(UserService.createService());
-
-        // Initialize the local UI
-        updateLocalUi(System.currentTimeMillis());
     }
 
     /**
@@ -249,8 +246,8 @@ public class GattServerActivity extends Activity {
     /**
      * Update graphical UI on devices that support it with the current time.
      */
-    private void updateLocalUi(long timestamp) {
-        Date date = new Date(timestamp);
+    private void updateUi() {
+        Date date = new Date();
         String displayDate = DateFormat.getMediumDateFormat(this).format(date)
                 + "\n"
                 + DateFormat.getTimeFormat(this).format(date);
@@ -298,63 +295,5 @@ public class GattServerActivity extends Activity {
             }
         }
 
-        @Override
-        public void onDescriptorReadRequest(BluetoothDevice device, int requestId, int offset,
-                                            BluetoothGattDescriptor descriptor) {
-            if (UserService.ANSWER_CLIENT_DESCRIPTOR.equals(descriptor.getUuid())) {
-                Log.d(TAG, "Config descriptor read");
-                byte[] returnValue;
-                if (mRegisteredDevices.contains(device)) {
-                    returnValue = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
-                } else {
-                    returnValue = BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE;
-                }
-                mBluetoothGattServer.sendResponse(device,
-                        requestId,
-                        BluetoothGatt.GATT_FAILURE,
-                        0,
-                        returnValue);
-            } else {
-                Log.w(TAG, "Unknown descriptor read request");
-                mBluetoothGattServer.sendResponse(device,
-                        requestId,
-                        BluetoothGatt.GATT_FAILURE,
-                        0,
-                        null);
-            }
-        }
-
-        @Override
-        public void onDescriptorWriteRequest(BluetoothDevice device, int requestId,
-                                             BluetoothGattDescriptor descriptor,
-                                             boolean preparedWrite, boolean responseNeeded,
-                                             int offset, byte[] value) {
-//            if (UserService.CLIENT_CONFIG.equals(descriptor.getUuid())) {
-//                if (Arrays.equals(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE, value)) {
-//                    Log.d(TAG, "Subscribe device to notifications: " + device);
-//                    mRegisteredDevices.add(device);
-//                } else if (Arrays.equals(BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE, value)) {
-//                    Log.d(TAG, "Unsubscribe device from notifications: " + device);
-//                    mRegisteredDevices.remove(device);
-//                }
-//
-//                if (responseNeeded) {
-//                    mBluetoothGattServer.sendResponse(device,
-//                            requestId,
-//                            BluetoothGatt.GATT_SUCCESS,
-//                            0,
-//                            null);
-//                }
-//            } else {
-//                Log.w(TAG, "Unknown descriptor write request");
-//                if (responseNeeded) {
-//                    mBluetoothGattServer.sendResponse(device,
-//                            requestId,
-//                            BluetoothGatt.GATT_FAILURE,
-//                            0,
-//                            null);
-//                }
-//            }
-        }
     };
 }
