@@ -5,14 +5,17 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import com.hydra3_2.client.R;
 
+import java.util.List;
+
 public class AnswersActivity extends AppCompatActivity implements OptionsAnswersFragment.OnAnswerChoosedListener,
         NumberInputAnswersFragment.OnAnswerTypedListener, ProfileFragment.OnConnectPressedListener, ResultFragment.OnResultButtonsListener {
-
+    public static final String QUESTION_KEY = "question_key";
     public static final int PRIMARY_ANSWER_TYPE = 0;
     public static final int SECODNARY_ANSWER_TYPE = 1;
     private FragmentManager fragmentManager;
     private int answerType = 0;
     private int stepsCount = 0;
+    List<QuizQuestion> questionList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,34 +23,37 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
         setContentView(R.layout.activity_answers);
         fragmentManager = getSupportFragmentManager();
         getSupportActionBar().setTitle("Home Pub Quiz");
+        questionList = MockedQuestionGenerator.getMockedQuestions(this);
         displayProfileScreen();
     }
 
-    private void displayOptionsAnswerScreen() {
+    private void displayOptionsAnswerScreen(QuizQuestion quizQuestion) {
         OptionsAnswersFragment optionsAnswersFragment;
 
         optionsAnswersFragment = (OptionsAnswersFragment) fragmentManager
                 .findFragmentByTag(OptionsAnswersFragment.TAG);
-        if (optionsAnswersFragment == null) {
-            optionsAnswersFragment =
-                    OptionsAnswersFragment.newInstance("Zasto je Ruki nervozan?");
+//        if (optionsAnswersFragment == null) {
+        optionsAnswersFragment =
+                OptionsAnswersFragment.newInstance(quizQuestion.question);
 
-        }
+        //  }
+
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentHolder, optionsAnswersFragment,
                         OptionsAnswersFragment.TAG).commit();
     }
 
-    private void displayNumberInputAnswerScreen() {
+    private void displayNumberInputAnswerScreen(QuizQuestion quizQuestion) {
         NumberInputAnswersFragment numberInputAnswersFragment;
 
         numberInputAnswersFragment = (NumberInputAnswersFragment) fragmentManager
                 .findFragmentByTag(NumberInputAnswersFragment.TAG);
-        if (numberInputAnswersFragment == null) {
-            numberInputAnswersFragment =
-                    NumberInputAnswersFragment.newInstance("Zasto je Ruki nervozan?");
+        // if (numberInputAnswersFragment == null) {
+        numberInputAnswersFragment =
+                NumberInputAnswersFragment.newInstance(quizQuestion.question);
 
-        }
+        //    }
+
         fragmentManager.beginTransaction()
                 .replace(R.id.fragmentHolder, numberInputAnswersFragment,
                         NumberInputAnswersFragment.TAG).commit();
@@ -90,17 +96,21 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
     }
 
     private void showNextFragment() {
-        if (stepsCount == 0) {
-            displayOptionsAnswerScreen();
-        } else if (stepsCount == 1) {
-            displayNumberInputAnswerScreen();
-        } else if (stepsCount == 2) {
-            displayNumberInputAnswerScreen();
-        } else if (stepsCount == 3) {
-            displayOptionsAnswerScreen();
+        if (stepsCount < questionList.size()) {
+            QuizQuestion quizQuestion  = questionList.get(stepsCount);
+            switch (quizQuestion.type) {
+                case 0:
+                case 1:
+                    displayOptionsAnswerScreen(quizQuestion);
+                    break;
+                case 2:
+                    displayNumberInputAnswerScreen(quizQuestion);
+                    break;
+            }
         } else {
             displayResultScreen();
         }
+
         stepsCount++;
     }
 
