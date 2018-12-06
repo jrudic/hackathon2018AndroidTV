@@ -3,14 +3,12 @@ package rs.hydra.androidtv.bluetoothlegatt;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import rs.hydra.androidtv.quiz.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class QuizManager {
 

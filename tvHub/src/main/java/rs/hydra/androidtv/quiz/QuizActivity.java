@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 public class QuizActivity extends FragmentActivity {
 
-    private static final long QUESTION_TIME = 3000;
+    private static final long QUESTION_TIME = 15000;
 
     private LinearLayout numericAnswersLayout, multiAnswerLayout;
     private RelativeLayout questionLayout, startLayout;
