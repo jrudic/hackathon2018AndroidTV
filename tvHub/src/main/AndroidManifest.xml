@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme">
         <activity
                 android:name=".HubActivity"
-                android:banner="@drawable/app_icon_your_company"
+                android:banner="@drawable/banner"
                 android:icon="@drawable/app_icon_your_company"
                 android:label="@string/title_activity_hub"
                 android:logo="@drawable/app_icon_your_company"
