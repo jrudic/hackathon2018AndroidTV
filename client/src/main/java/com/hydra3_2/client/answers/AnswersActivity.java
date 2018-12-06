@@ -412,7 +412,7 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
         }
 
 
-    }
+
 
     private void showNext() {
         new CountDownTimer(QUESTION_TIME, 1000) {
