@@ -17,23 +17,15 @@
 package rs.hydra.androidtv.bluetoothlegatt;
 
 import android.app.Service;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothProfile;
+import android.bluetooth.*;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -74,8 +66,8 @@ public class BluetoothLeService extends Service {
                 QuizManager.getInstance().addConnectedGatServiceForDevice(gatt.getDevice().getAddress(),gatt);
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
-//                broadcastUpdate(intentAction);
-                Log.i("bla", "Device adress."+gatt.getDevice().getAddress());
+             //  broadcastUpdate(intentAction);
+                Log.i("bla", "Device adress." + gatt.getDevice().getAddress());
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" +

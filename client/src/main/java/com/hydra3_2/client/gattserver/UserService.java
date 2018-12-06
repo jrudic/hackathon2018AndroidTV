@@ -46,12 +46,13 @@ public class UserService {
         // Answer characteristic
         BluetoothGattCharacteristic answer = new BluetoothGattCharacteristic(ANSWER_CLIENT_CHARACTERISTIC,
                 //Read-only characteristic, supports notifications
-                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_WRITE|BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                 BluetoothGattCharacteristic.PERMISSION_READ);
         BluetoothGattCharacteristic question = new BluetoothGattCharacteristic(QUESTION_CHARACTERISTIC,
                 //Read-only characteristic, supports notifications
-                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-                BluetoothGattCharacteristic.PERMISSION_READ);
+                BluetoothGattCharacteristic.PROPERTY_WRITE|BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+                BluetoothGattCharacteristic.PERMISSION_WRITE);
+        question.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
 //        BluetoothGattDescriptor configDescriptor = new BluetoothGattDescriptor(ANSWER_CLIENT_DESCRIPTOR,
 //                //Read/write descriptor
 //                BluetoothGattDescriptor.PERMISSION_READ | BluetoothGattDescriptor.PERMISSION_WRITE);
@@ -59,8 +60,9 @@ public class UserService {
 
         BluetoothGattCharacteristic questionType = new BluetoothGattCharacteristic(QUESTION_TYPE_CHARACTERISTIC,
                 //Read-only characteristic, supports notifications
-                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
-                BluetoothGattCharacteristic.PERMISSION_READ);
+                BluetoothGattCharacteristic.PROPERTY_WRITE|BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+                BluetoothGattCharacteristic.PERMISSION_WRITE);
+        questionType.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
         BluetoothGattCharacteristic userName = new BluetoothGattCharacteristic(USER_NAME_CHARACTERISTIC,
                 //Read-only characteristic, supports notifications
                 BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,

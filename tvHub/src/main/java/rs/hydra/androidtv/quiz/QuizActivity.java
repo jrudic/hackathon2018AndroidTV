@@ -216,8 +216,9 @@ public class QuizActivity extends FragmentActivity {
             showResults();
         } else {
             startCounter();
-            showQuestion(viewModel.getNextQuestion());
-            QuizManager.getInstance().currentCorrectAnswer = viewModel.getCorrectAnswer().answer;
+            QuizQuestion question =viewModel.getNextQuestion();
+            showQuestion(question);
+            QuizManager.getInstance().setQuestionAndAnswer(question,viewModel.getCorrectAnswer());
         }
     }
 
