@@ -75,6 +75,7 @@ public class BluetoothLeService extends Service {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
 //                broadcastUpdate(intentAction);
+                Log.i("bla", "Device adress."+gatt.getDevice().getAddress());
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" +

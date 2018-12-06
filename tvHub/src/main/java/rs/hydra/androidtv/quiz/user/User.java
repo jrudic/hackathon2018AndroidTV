@@ -46,6 +46,7 @@ public class User implements Parcelable {
 
 
     protected User(Parcel in) {
+        this.deviceName = in.readString();
         this.name = in.readString();
         this.points = in.readInt();
     }

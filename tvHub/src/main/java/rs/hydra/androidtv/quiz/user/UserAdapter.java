@@ -31,7 +31,7 @@ public class UserAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         UserViewHolder userViewHolder = (UserViewHolder) holder;
         User item = getItem(position);
-        userViewHolder.name.setText(item.name);
+        userViewHolder.name.setText(item.deviceName);
     }
 
     public User getItem(int position) {
