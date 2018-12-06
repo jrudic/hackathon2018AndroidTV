@@ -10,8 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.ParcelUuid;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -36,6 +39,8 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
     private int answerType = 0;
     private int stepsCount = 0;
     List<QuizQuestion> questionList;
+    private static final long SCAN_PERIOD = 10000;
+    private static final long QUESTION_TIME = 17000;
 
     /* Bluetooth API */
     private BluetoothManager mBluetoothManager;
@@ -140,12 +145,14 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
 
     @Override
     public void onAnswerChoosed(String answer) {
-        showNextFragment();
+        if (stepsCount != 0) {
+            showNext();
+        }
     }
 
     private void showNextFragment() {
         if (stepsCount < questionList.size()) {
-            QuizQuestion quizQuestion  = questionList.get(stepsCount);
+            QuizQuestion quizQuestion = questionList.get(stepsCount);
             switch (quizQuestion.type) {
                 case 0:
                 case 1:
@@ -164,7 +171,9 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
 
     @Override
     public void onAnswerTyped(String answer) {
-        showNextFragment();
+        if (stepsCount != 0) {
+            showNext();
+        }
     }
 
     @Override
@@ -404,3 +413,19 @@ public class AnswersActivity extends AppCompatActivity implements OptionsAnswers
 
 
     }
+
+    private void showNext() {
+        new CountDownTimer(QUESTION_TIME, 1000) {
+
+            @SuppressLint("SetTextI18n")
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                showNextFragment();
+            }
+        }.start();
+    }
+
+}
