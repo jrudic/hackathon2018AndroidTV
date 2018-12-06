@@ -1,10 +1,21 @@
 package rs.hydra.androidtv.quiz;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.ParcelUuid;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +24,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.*;
 import rs.hydra.androidtv.R;
+import rs.hydra.androidtv.bluetoothlegatt.SampleGattAttributes;
 import rs.hydra.androidtv.quiz.model.QuestionUtility;
 import rs.hydra.androidtv.quiz.model.QuizAnswer;
 import rs.hydra.androidtv.quiz.model.QuizQuestion;
@@ -20,9 +32,8 @@ import rs.hydra.androidtv.quiz.score.ScoreActivity;
 import rs.hydra.androidtv.quiz.user.User;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class QuizActivity extends FragmentActivity implements QuizInterface {
+public class QuizActivity extends FragmentActivity {
 
     private static final long QUESTION_TIME = 3000;
 
@@ -42,15 +53,32 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
 
     private ArrayList<User> users = new ArrayList<>();
 
+    //Bloototh stuff
+    private BluetoothAdapter mBluetoothAdapter;
+    private boolean mScanning;
+    private Handler mHandler;
+    private static final int REQUEST_ENABLE_BT = 1;
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 10000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        mHandler = new Handler();
+
         viewModel = ViewModelProviders.of(this).get(QuizViewModel.class);
         viewModel.init(this);
 
         initViews();
+
+        final BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, R.string.error_bluetooth_not_supported, Toast.LENGTH_SHORT).show();
+        }
 
         questionLayout.setVisibility(View.GONE);
         startLayout.setVisibility(View.VISIBLE);
@@ -259,9 +287,70 @@ public class QuizActivity extends FragmentActivity implements QuizInterface {
     }
 
     @Override
-    public void setUsersList(List<User> users) {
-        this.users.clear();
-        this.users.addAll(users);
-        userList.setAdapter(viewModel.getUserAdapter(this, this.users));
+    protected void onResume() {
+        super.onResume();
+
+        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
+        // fire an intent to display a dialog asking the user to grant permission to enable it.
+        if (!mBluetoothAdapter.isEnabled()) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+        }
+
+        scanLeDevice(true);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        scanLeDevice(false);
+    }
+
+    private void scanLeDevice(final boolean enable) {
+        if (enable) {
+            // Stops scanning after a pre-defined scan period.
+            mHandler.postDelayed(() -> {
+                mScanning = false;
+                mBluetoothAdapter.getBluetoothLeScanner().stopScan(onScanCallback);
+                invalidateOptionsMenu();
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            ScanFilter userServicesFillter = new ScanFilter.Builder().setServiceUuid(new ParcelUuid(SampleGattAttributes.USER_SERVICE_UUID)).build();
+            ArrayList<ScanFilter> filters = new ArrayList<>();
+            filters.add(userServicesFillter);
+            mBluetoothAdapter.getBluetoothLeScanner().startScan(filters, new ScanSettings.Builder().build(), onScanCallback);
+        } else {
+            mScanning = false;
+            mBluetoothAdapter.getBluetoothLeScanner().stopScan(onScanCallback);
+        }
+        invalidateOptionsMenu();
+    }
+
+    private ScanCallback onScanCallback =
+            new ScanCallback() {
+                public void onScanResult(int callbackType, ScanResult result) {
+                    final BluetoothDevice device = result.getDevice();
+                    runOnUiThread(() -> addUser(new User(device.getAddress(), device.getName())));
+                }
+            };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // User chose not to enable Bluetooth.
+        if (requestCode == REQUEST_ENABLE_BT && resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void addUser(User users) {
+        if (!this.users.contains(users)) {
+            this.users.add(users);
+            userList.setAdapter(viewModel.getUserAdapter(this, this.users));
+        }
     }
 }
