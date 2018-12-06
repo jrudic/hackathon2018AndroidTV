@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 public class QuizManager {
 
-    private static QuizManager sInsatance;
+    private static volatile QuizManager sInstance;
     //device,gatt
     private HashMap<String, BluetoothGatt> usersServicesHashMap = new HashMap();
     //device,user
@@ -23,17 +23,24 @@ public class QuizManager {
     public String currentCorrectAnswer;
 
     public static QuizManager getInstance() {
-        if (sInsatance == null) {
-            return new QuizManager();
+        if (sInstance == null) {
+            synchronized (QuizManager.class) {
+                if (sInstance == null) {
+                    sInstance = new QuizManager();
+                }
+            }
         }
-        return sInsatance;
+        return sInstance;
     }
 
     private QuizManager() {
     }
 
     public void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
-        usersServicesHashMap.put(deviceUid, gatt);
+        if(!usersServicesHashMap.containsKey(deviceUid)){
+        usersServicesHashMap.put(deviceUid, gatt);}
+        Log.d("bla","Size "+usersServicesHashMap.keySet().size());
+        Log.d("bla","UId "+usersServicesHashMap.get(deviceUid));
     }
     public void removeConnectedGatServiceForDevice(String deviceUid) {
 //        usersServicesHashMap.remove(deviceUid);
@@ -63,7 +70,7 @@ public class QuizManager {
         }
     }
 
-    public void readAnswers() {
+    public synchronized void readAnswers() {
         Log.d("bla",""+usersServicesHashMap.keySet().size());
         for (String key: usersServicesHashMap.keySet()) {
             BluetoothGatt gatt = usersServicesHashMap.get(key);
