@@ -33,8 +33,8 @@ public class UserService {
     public static UUID ANSWER_CLIENT_CHARACTERISTIC = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb");
     public static UUID QUESTION_TYPE_CHARACTERISTIC = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
     public static UUID QUESTION_CHARACTERISTIC = UUID.fromString("00002907-0000-1000-8000-00805f9b34fb");
+    public static UUID USER_NAME_CHARACTERISTIC = UUID.fromString("00002a39-0000-1000-8000-00805f9b34fb");
 
-    public static UUID ANSWER_CLIENT_DESCRIPTOR = UUID.fromString("00002a52-0000-1000-8000-00805f9b34fb");
     /**
      * Return a configured {@link BluetoothGattService} instance for the
      * Current Time Service.
@@ -52,12 +52,16 @@ public class UserService {
                 //Read-only characteristic, supports notifications
                 BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                 BluetoothGattCharacteristic.PERMISSION_READ);
-        BluetoothGattDescriptor configDescriptor = new BluetoothGattDescriptor(ANSWER_CLIENT_DESCRIPTOR,
-                //Read/write descriptor
-                BluetoothGattDescriptor.PERMISSION_READ | BluetoothGattDescriptor.PERMISSION_WRITE);
-        answer.addDescriptor(configDescriptor);
+//        BluetoothGattDescriptor configDescriptor = new BluetoothGattDescriptor(ANSWER_CLIENT_DESCRIPTOR,
+//                //Read/write descriptor
+//                BluetoothGattDescriptor.PERMISSION_READ | BluetoothGattDescriptor.PERMISSION_WRITE);
+//        answer.addDescriptor(configDescriptor);
 
         BluetoothGattCharacteristic questionType = new BluetoothGattCharacteristic(QUESTION_TYPE_CHARACTERISTIC,
+                //Read-only characteristic, supports notifications
+                BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
+                BluetoothGattCharacteristic.PERMISSION_READ);
+        BluetoothGattCharacteristic userName = new BluetoothGattCharacteristic(USER_NAME_CHARACTERISTIC,
                 //Read-only characteristic, supports notifications
                 BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY,
                 BluetoothGattCharacteristic.PERMISSION_READ);
@@ -65,6 +69,7 @@ public class UserService {
         service.addCharacteristic(answer);
         service.addCharacteristic(question);
         service.addCharacteristic(questionType);
+        service.addCharacteristic(userName);
 
         return service;
     }
