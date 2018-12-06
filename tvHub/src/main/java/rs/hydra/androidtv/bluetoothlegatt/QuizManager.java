@@ -5,8 +5,12 @@ import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.text.TextUtils;
 import android.util.Log;
+import rs.hydra.androidtv.quiz.model.QuestionUtility;
+import rs.hydra.androidtv.quiz.model.QuizAnswer;
+import rs.hydra.androidtv.quiz.model.QuizQuestion;
 import rs.hydra.androidtv.quiz.user.User;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,11 +41,9 @@ public class QuizManager {
     public void addConnectedGatServiceForDevice(String deviceUid, BluetoothGatt gatt) {
         if(!usersServicesHashMap.containsKey(deviceUid)){
         usersServicesHashMap.put(deviceUid, gatt);}
-        Log.d("bla","Size "+usersServicesHashMap.keySet().size());
-        Log.d("bla","UId "+usersServicesHashMap.get(deviceUid));
     }
     public void removeConnectedGatServiceForDevice(String deviceUid) {
-//        usersServicesHashMap.remove(deviceUid);
+        usersServicesHashMap.remove(deviceUid);
     }
     public void addUserForDevice(String deviceUid) {
         if (usersScoreHashMap.get(deviceUid) == null) {
@@ -69,11 +71,37 @@ public class QuizManager {
     }
 
     public synchronized void readAnswers() {
-        Log.d("bla",""+usersServicesHashMap.keySet().size());
+//        Log.d("bla",""+usersServicesHashMap.keySet().size());
+//        for (String key: usersServicesHashMap.keySet()) {
+//            BluetoothGatt gatt = usersServicesHashMap.get(key);
+//            BluetoothGattService service= gatt.getService(SampleGattAttributes.USER_SERVICE_UUID);
+//            gatt.readCharacteristic(service.getCharacteristic(SampleGattAttributes.ANSWER_CLIENT_CHARACTERISTIC));
+//        }
+    }
+
+    public void setQuestionAndAnswer(QuizQuestion question, QuizAnswer correctAnswer) {
         for (String key: usersServicesHashMap.keySet()) {
             BluetoothGatt gatt = usersServicesHashMap.get(key);
             BluetoothGattService service= gatt.getService(SampleGattAttributes.USER_SERVICE_UUID);
-            gatt.readCharacteristic(service.getCharacteristic(SampleGattAttributes.ANSWER_CLIENT_CHARACTERISTIC));
+
+            Log.d("bla",question.question+"characteristic for service"  +service.getCharacteristics().size());
+            BluetoothGattCharacteristic questionCharacteristic = service.getCharacteristic(SampleGattAttributes.QUESTION_CHARACTERISTIC);
+            questionCharacteristic.setValue(question.question);
+            questionCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+            gatt.setCharacteristicNotification(questionCharacteristic,true);
+            gatt.writeCharacteristic(questionCharacteristic);
+//            BluetoothGattCharacteristic questionTypeCharacteristic = service.getCharacteristic(SampleGattAttributes.QUESTION_TYPE_CHARACTERISTIC);
+//            questionTypeCharacteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+//            questionTypeCharacteristic.setValue(""+ question.type);
+//            gatt.setCharacteristicNotification(questionTypeCharacteristic,true);
+//            gatt.writeCharacteristic(questionTypeCharacteristic);
+
+            if(question.type!= QuestionUtility.QuestionType.NUMBER){
+                currentCorrectAnswer = String.valueOf(question.answers.indexOf(correctAnswer));
+            }else{
+                currentCorrectAnswer=correctAnswer.answer;
+            }
+
         }
     }
 }

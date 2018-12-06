@@ -295,5 +295,6 @@ public class GattServerActivity extends Activity {
             }
         }
 
+
     };
 }
