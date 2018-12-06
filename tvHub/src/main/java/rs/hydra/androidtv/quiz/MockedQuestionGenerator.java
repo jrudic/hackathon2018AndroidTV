@@ -36,7 +36,7 @@ public class MockedQuestionGenerator {
         answers2.add(new QuizAnswer("Labor omnia vincit", false));
         answers2.add(new QuizAnswer("Tempori parce", false));
         question2.answers = answers2;
-        questions.add(question2);
+      //questions.add(question2);
 
         QuizQuestion question3 = new QuizQuestion();
         question3.background = context.getResources().getDrawable(R.drawable.first_world_war);
@@ -79,7 +79,7 @@ public class MockedQuestionGenerator {
         List<QuizAnswer> answers8 = new ArrayList<>();
         answers8.add(new QuizAnswer("1804", true));
         question8.answers = answers8;
-        questions.add(question8);
+        //questions.add(question8);
 
         QuizQuestion question9 = new QuizQuestion();
         question9.background = context.getResources().getDrawable(R.drawable.modern3);
@@ -92,7 +92,7 @@ public class MockedQuestionGenerator {
         answers9.add(new QuizAnswer("Ilija Bosilj", false));
         answers9.add(new QuizAnswer("Sava Milosevic", false));
         question9.answers = answers9;
-        questions.add(question9);
+       //questions.add(question9);
 
         QuizQuestion question10 = new QuizQuestion();
         question10.background = context.getResources().getDrawable(R.drawable.kit_kat);
@@ -125,7 +125,7 @@ public class MockedQuestionGenerator {
         answers13.add(new QuizAnswer("Mozak", false));
         answers13.add(new QuizAnswer("Creva", false));
         question13.answers = answers13;
-        questions.add(question13);
+        //questions.add(question13);
 
         QuizQuestion question14 = new QuizQuestion();
         question14.background = context.getResources().getDrawable(R.drawable.modern4);
@@ -138,7 +138,7 @@ public class MockedQuestionGenerator {
         answers14.add(new QuizAnswer("Boris Jeljcin", true));
         answers14.add(new QuizAnswer("Jevgenij Primakov", false));
         question14.answers = answers14;
-        questions.add(question14);
+        //questions.add(question14);
 
         return questions;
     }
